@@ -81,14 +81,22 @@ export default function App() {
           <dialog className="modal" ref={dialogRef} onClose={() => setSelected(null)}>
               <div className="dialog-heading">
                 <h2>Réserver {selected}</h2>
-                <span className="close" onClick={() => setSelected(null)}>×</span>
+                <button className="close" onClick={() => {
+                  setSelected(null);
+                  selectedFilm && dialogRef.current?.close();
+                }}>×</button>
               </div>
               <p>{selectedFilm.genre} · Séance de {selectedFilm.time}</p>
               <p className={"availability " + (selectedFilm.available ? "available" : "unavailable")}>
                 {selectedFilm.available ? "Places disponibles" : "Séance complète"}
               </p>
               <p>Consultez la séance et sa disponibilité avant de revenir au programme.</p>
-              <button className="dialog-action" type="button" onClick={() => setSelected(null)}>Revenir aux films</button>
+              <button className="dialog-action" type="button" onClick={() => {
+                  setSelected(null);
+                  selectedFilm && dialogRef.current?.close();
+                }
+
+              }>Revenir aux films</button>
           </dialog>
         )}
       </main>
