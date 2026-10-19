@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import posterAube from "./assets/aube.svg";
 import posterMemoire from "./assets/memoire.svg";
 import posterOrbite from "./assets/orbite.svg";
@@ -14,6 +14,10 @@ export default function App() {
   const [selected, setSelected] = useState<string | null>(null);
   const selectedFilm = films.find((film) => film.title === selected);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (selected) dialogRef.current?.showModal();
+  }, [selected]);
   const filteredFilms = useMemo(
     () => films.filter((film) => film.title.toLowerCase().includes(query.toLowerCase())),
     [query],
@@ -74,8 +78,7 @@ export default function App() {
           <p>Le cinéma ouvre trente minutes avant la première séance.</p>
         </section>
         {selectedFilm && (
-          <div className="backdrop">
-            <div className="modal">
+          <dialog className="modal" ref={dialogRef} onClose={() => setSelected(null)}>
               <div className="dialog-heading">
                 <h2>Réserver {selected}</h2>
                 <span className="close" onClick={() => setSelected(null)}>×</span>
@@ -86,8 +89,7 @@ export default function App() {
               </p>
               <p>Consultez la séance et sa disponibilité avant de revenir au programme.</p>
               <button className="dialog-action" type="button" onClick={() => setSelected(null)}>Revenir aux films</button>
-            </div>
-          </div>
+          </dialog>
         )}
       </main>
     </>
